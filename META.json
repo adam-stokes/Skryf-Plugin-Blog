@@ -1,5 +1,5 @@
 {
-   "abstract" : "Blah blah blah",
+   "abstract" : "Skryf Plugin",
    "author" : [
       "Adam Stokes <adamjs@cpan.org>"
    ],
@@ -46,6 +46,20 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.01"
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/skryf/App-skryf-Plugin-Blog/issues"
+      },
+      "homepage" : "https://github.com/skryf/App-skryf-Plugin-Blog",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/skryf/App-skryf-Plugin-Blog.git",
+         "web" : "https://github.com/skryf/App-skryf-Plugin-Blog"
+      }
+   },
+   "version" : "0.01",
+   "x_contributors" : [
+      "Adam Stokes <adam.stokes@ubuntu.com>"
+   ]
 }
 

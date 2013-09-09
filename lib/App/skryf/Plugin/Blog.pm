@@ -7,6 +7,8 @@ use Mango::BSON ':bson';
 
 use App::skryf::Plugin::Blog::Controller;
 
+our $VERSION = '0.01';
+
 has indexPath       => '/post/';
 has postPath        => '/post/:slug';
 has feedPath        => '/post/feeds/atom.xml';
