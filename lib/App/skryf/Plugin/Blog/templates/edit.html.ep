@@ -1,0 +1,20 @@
+% layout 'auth';
+%= t 'div', id => 'admin-body' => begin
+  %= t 'h3' => 'Update: '. $post->{topic}
+    % if (my $msg = flash 'message') {
+    <b><%= $msg %></b>
+    % }
+  %= form_for "/admin/post/update" => ( method => 'POST' ) => begin
+  %= hidden_field slug => $post->{slug}
+  %= t 'span' => 'Topic'
+  %= text_field 'topic', type => 'text', class => 'form-control', value => $post->{topic}
+  %= t 'span' => 'Body'
+  <div class="wmd-panel">
+    <div id='wmd-button-bar'></div>
+  %= text_area 'content' => $post->{content}, class => 'wmd-input', id => 'wmd-input'
+  </div>
+  %= t 'span' => 'Tags'
+  %= text_field 'tags', type => 'text', class => 'form-control', value => $post->{tags}
+  %= submit_button 'Update', class => 'btn'
+  %= end
+%= end

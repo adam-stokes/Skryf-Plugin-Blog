@@ -1,0 +1,17 @@
+% layout 'auth';
+%= t 'div', id => 'admin-body' => begin
+  %= t 'h3' => 'New content'
+
+  %= form_for '/admin/post/new' => ( method => 'POST' ) => begin
+  %= t 'span' => 'Topic'
+  %= text_field 'topic', type => 'text', class => 'form-control'
+  %= t 'span' => 'Body'
+  <div class="wmd-panel">
+    <div id='wmd-button-bar'></div>
+    %= text_area 'content', class => 'wmd-input', id => 'wmd-input'
+  </div>
+  %= t 'span' => 'Tags'
+  %= text_field 'tags', type => 'text', class => 'form-control'
+  %= submit_button 'Add', class => 'btn'
+  %= end
+%= end
