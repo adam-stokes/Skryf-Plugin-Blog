@@ -7,14 +7,10 @@ use XML::Atom::SimpleFeed;
 use DateTime::Format::RFC3339;
 use Encode;
 
-method blog_splash {
-    $self->render('splash');
-}
-
 method blog_index {
     my $model = App::skryf::Model::Post->new;
     my $posts = $model->all;
-    $self->render('index', postlist => $posts);
+    $self->render(json => $posts);
 }
 
 method blog_detail {
@@ -28,9 +24,7 @@ method blog_detail {
     unless ($post) {
         $self->render(text => 'No post found!', status => $post);
     }
-
-    $self->stash(post => $post);
-    $self->render('detail');
+    $self->render(json => $post);
 }
 
 method blog_feeds_by_cat {
