@@ -4,6 +4,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 use File::Basename 'dirname';
 use File::Spec::Functions 'catdir';
 use Mango::BSON ':bson';
+use DDP;
 
 use App::skryf::Plugin::Blog::Controller;
 
@@ -18,6 +19,14 @@ has namespace       => 'App::skryf::Plugin::Blog::Controller';
 
 sub register {
     my ($self, $app, $config) = @_;
+
+    my $base = catdir(dirname(__FILE__), 'Blog');
+    push @{$app->renderer->paths}, catdir($base, 'templates');
+    push @{$app->static->paths},   catdir($base, 'assets');
+
+    push @{$app->renderer->classes}, __PACKAGE__;
+    push @{$app->static->classes},   __PACKAGE__;
+    p $app->renderer->paths;
 
     $app->routes->route($self->feedPath)->via('GET')->to(
         namespace => $self->namespace,

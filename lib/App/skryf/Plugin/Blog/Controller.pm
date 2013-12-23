@@ -14,7 +14,7 @@ method blog_splash {
 method blog_index {
     my $model = App::skryf::Model::Post->new;
     my $posts = $model->all;
-    $self->render('blog/index', postlist => $posts);
+    $self->render('index', postlist => $posts);
 }
 
 method blog_detail {
@@ -30,7 +30,7 @@ method blog_detail {
     }
 
     $self->stash(post => $post);
-    $self->render('blog/detail');
+    $self->render('detail');
 }
 
 method blog_feeds_by_cat {
@@ -51,7 +51,7 @@ method blog_feeds {
 method admin_blog_index {
     my $model = App::skryf::Model::Post->new;
     $self->stash(postlist => $model->all);
-    $self->render('blog/admin_index');
+    $self->render('admin_index');
 }
 
 method admin_blog_new {
@@ -65,7 +65,7 @@ method admin_blog_new {
         $self->redirect_to('admin_blog_index');
     }
     else {
-        $self->render('blog/new');
+        $self->render('new');
     }
 }
 
@@ -73,7 +73,7 @@ method admin_blog_edit {
     my $slug  = $self->param('slug');
     my $model = App::skryf::Model::Post->new;
     $self->stash(post => $model->get($slug));
-    $self->render('blog/edit');
+    $self->render('edit');
 }
 
 method admin_blog_update {
