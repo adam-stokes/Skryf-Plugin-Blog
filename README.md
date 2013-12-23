@@ -15,7 +15,7 @@ App::skryf::Plugin::Blog - Skryf Plugin
 
 # DESCRIPTION
 
-[App::skryf::Plugin::Blog](http://search.cpan.org/perldoc?App::skryf::Plugin::Blog) is a [App::skryf](http://search.cpan.org/perldoc?App::skryf) plugin.
+[App::skryf::Plugin::Blog](https://metacpan.org/pod/App::skryf::Plugin::Blog) is a [App::skryf](https://metacpan.org/pod/App::skryf) plugin.
 
 # OPTIONS
 
@@ -45,14 +45,14 @@ Blog controller namespace.
 
 # METHODS
 
-[App::skryf::Plugin::Blog](http://search.cpan.org/perldoc?App::skryf::Plugin::Blog) inherits all methods from
-[Mojolicious::Plugin](http://search.cpan.org/perldoc?Mojolicious::Plugin) and implements the following new ones.
+[App::skryf::Plugin::Blog](https://metacpan.org/pod/App::skryf::Plugin::Blog) inherits all methods from
+[Mojolicious::Plugin](https://metacpan.org/pod/Mojolicious::Plugin) and implements the following new ones.
 
 ## register
 
     $plugin->register(Mojolicious->new);
 
-Register plugin in [Mojolicious](http://search.cpan.org/perldoc?Mojolicious) application.
+Register plugin in [Mojolicious](https://metacpan.org/pod/Mojolicious) application.
 
 # AUTHOR
 
@@ -68,4 +68,4 @@ Licensed under the same terms as Perl.
 
 # SEE ALSO
 
-[App::skryf](http://search.cpan.org/perldoc?App::skryf), [Mojolicious](http://search.cpan.org/perldoc?Mojolicious), [Mojolicious::Guides](http://search.cpan.org/perldoc?Mojolicious::Guides), [http://mojolicio.us](http://mojolicio.us).
+[App::skryf](https://metacpan.org/pod/App::skryf), [Mojolicious](https://metacpan.org/pod/Mojolicious), [Mojolicious::Guides](https://metacpan.org/pod/Mojolicious::Guides), [http://mojolicio.us](http://mojolicio.us).
