@@ -19,6 +19,8 @@ App::skryf::Plugin::Blog - Skryf Plugin
 
 # OPTIONS
 
+These are RESTful calls that return JSON or a proper RSS feed if integrating with aggregators.
+
 ## indexPath
 
 Blog index route

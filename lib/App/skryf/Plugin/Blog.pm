@@ -108,6 +108,8 @@ L<App::skryf::Plugin::Blog> is a L<App::skryf> plugin.
 
 =head1 OPTIONS
 
+These are RESTful calls that return JSON or a proper RSS feed if integrating with aggregators.
+
 =head2 indexPath
 
 Blog index route
