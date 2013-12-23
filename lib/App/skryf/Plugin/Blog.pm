@@ -3,7 +3,6 @@ package App::skryf::Plugin::Blog;
 use Mojo::Base 'Mojolicious::Plugin';
 use File::Basename 'dirname';
 use File::Spec::Functions 'catdir';
-use Mango::BSON ':bson';
 use DDP;
 
 use App::skryf::Plugin::Blog::Controller;
@@ -14,7 +13,6 @@ has indexPath       => '/post/';
 has postPath        => '/post/:slug';
 has feedPath        => '/post/feeds/atom.xml';
 has feedCatPath     => '/post/feeds/:category/atom.xml';
-has adminPathPrefix => '/admin/post/';
 has namespace       => 'App::skryf::Plugin::Blog::Controller';
 
 sub register {
@@ -40,41 +38,14 @@ sub register {
         action    => 'blog_detail',
     )->name('blog_detail');
 
+    # Admin auth
     my $auth_r = $app->routes->under(
         sub {
             my $self = shift;
             return $self->session('user') || !$self->redirect_to('login');
         }
     );
-    $auth_r->route($self->adminPathPrefix)->via('GET')->to(
-        namespace => $self->namespace,
-        action    => 'admin_blog_index',
-    )->name('admin_blog_index');
 
-    $auth_r->route($self->adminPathPrefix . "new")->via(qw(GET POST))->to(
-        namespace => $self->namespace,
-        action    => 'admin_blog_new',
-    )->name('admin_blog_new');
-    $auth_r->route($self->adminPathPrefix . "edit/:slug")->via('GET')->to(
-        namespace => $self->namespace,
-        action    => 'admin_blog_edit',
-    )->name('admin_blog_edit');
-    $auth_r->route($self->adminPathPrefix . "update")->via('POST')->to(
-        namespace => $self->namespace,
-        action    => 'admin_blog_update',
-    )->name('admin_blog_update');
-    $auth_r->route($self->adminPathPrefix . "delete/:slug")->via('GET')->to(
-        namespace => $self->namespace,
-        action    => 'admin_blog_delete',
-    )->name('admin_blog_delete');
-
-    # register menu item
-    push @{$app->admin_menu},
-      { menu => {
-            name   => 'Posts',
-            action => 'admin_blog_index',
-        }
-      };
     push @{$app->frontend_menu},
       { menu => {
             name   => 'Archives',
