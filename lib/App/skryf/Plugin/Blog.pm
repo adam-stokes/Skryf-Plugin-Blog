@@ -7,7 +7,7 @@ use DDP;
 
 use App::skryf::Plugin::Blog::Controller;
 
-our $VERSION = '0.02';
+our $VERSION = '0.02_1';
 
 has indexPath       => '/post/';
 has postPath        => '/post/:slug';
