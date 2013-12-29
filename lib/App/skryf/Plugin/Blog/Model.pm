@@ -1,4 +1,6 @@
-package App::skryf::Model::Post;
+package App::skryf::Plugin::Blog::Model;
+
+# VERSION
 
 use Mojo::Base 'App::skryf::Model::Base';
 use Mango::BSON ':bson';
@@ -68,11 +70,11 @@ __END__
 
 =head1 NAME
 
-App::skryf::Model::Post - Post Model Skryf
+App::skryf::Plugin::Blog:::Model - Skryf Blog Model
 
 =head1 DESCRIPTION
 
-Post model 
+Post model
 
 =head1 METHODS
 

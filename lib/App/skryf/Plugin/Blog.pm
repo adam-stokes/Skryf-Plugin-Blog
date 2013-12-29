@@ -7,7 +7,7 @@ use DDP;
 
 use App::skryf::Plugin::Blog::Controller;
 
-our $VERSION = '0.02_1';
+# VERSION
 
 has indexPath       => '/post/';
 has postPath        => '/post/:slug';
@@ -17,6 +17,13 @@ has namespace       => 'App::skryf::Plugin::Blog::Controller';
 
 sub register {
     my ($self, $app, $config) = @_;
+
+    my $base = catdir(dirname(__FILE__), 'Blog');
+    push @{$app->renderer->paths}, catdir($base, 'templates');
+    push @{$app->static->paths},   catdir($base, 'public');
+
+    push @{$app->renderer->classes}, __PACKAGE__;
+    push @{$app->static->classes},   __PACKAGE__;
 
     $app->routes->route($self->feedPath)->via('GET')->to(
         namespace => $self->namespace,
@@ -38,20 +45,7 @@ sub register {
         action    => 'blog_detail',
     )->name('blog_detail');
 
-    # Admin auth
-    my $auth_r = $app->routes->under(
-        sub {
-            my $self = shift;
-            return $self->session('user') || !$self->redirect_to('login');
-        }
-    );
-
-    push @{$app->frontend_menu},
-      { menu => {
-            name   => 'Archives',
-            action => 'blog_index'
-        }
-      };
+    push @{$app->loaded_plugins}, {plugin => {name => 'Blog',}};
     return;
 }
 
