@@ -37,10 +37,6 @@ Returns XML formatted RSS feed
 
 Returns XML formatted categorized RSS feed
 
-## namespace
-
-Blog controller namespace.
-
 # METHODS
 
 [App::skryf::Plugin::Blog](https://metacpan.org/pod/App::skryf::Plugin::Blog) inherits all methods from
