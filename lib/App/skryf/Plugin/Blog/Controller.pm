@@ -9,9 +9,10 @@ use XML::Atom::SimpleFeed;
 use DateTime::Format::RFC3339;
 use Encode;
 
+has model => App::skryf::Plugin::Blog::Model->new;
+
 method blog_index {
-    my $model = App::skryf::Plugin::Blog::Model->new;
-    my $posts = $model->all;
+    my $posts = $self->model->all;
     $self->render(json => $posts);
 }
 
@@ -21,8 +22,7 @@ method blog_detail {
         $self->render(json => 'Invalid post name!', status => 404);
         return;
     }
-    my $model = App::skryf::Plugin::Blog::Model->new;
-    my $post  = $model->get($slug);
+    my $post  = $self->model->get($slug);
     unless ($post) {
         $self->render(json => 'No post found!', status => $post);
     }
@@ -31,15 +31,13 @@ method blog_detail {
 
 method blog_feeds_by_cat {
     my $category = $self->param('category');
-    my $model    = App::skryf::Plugin::Blog::Model->new;
-    my $posts    = $model->by_cat($category);
+    my $posts    = $self->model->by_cat($category);
     my $feed     = App::skryf::Util->feed($self->config, $posts);
     $self->render(text => $feed->as_string, format => 'xml');
 }
 
 method blog_feeds {
-    my $model = App::skryf::Plugin::Blog::Model->new;
-    my $posts = $model->all;
+    my $posts = $self->model->all;
     my $feed  = App::skryf::Util->feed($self->config, $posts);
     $self->render(text => $feed->as_string, format => 'xml');
 }

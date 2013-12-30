@@ -3,20 +3,22 @@ package App::skryf::Plugin::Blog;
 use Mojo::Base 'Mojolicious::Plugin';
 use File::Basename 'dirname';
 use File::Spec::Functions 'catdir';
+
+# debug
 use DDP;
 
 use App::skryf::Plugin::Blog::Controller;
 
 # VERSION
 
-has indexPath       => '/post/';
-has postPath        => '/post/:slug';
-has feedPath        => '/post/feeds/atom.xml';
-has feedCatPath     => '/post/feeds/:category/atom.xml';
-has namespace       => 'App::skryf::Plugin::Blog::Controller';
+has indexPath   => '/post/';
+has postPath    => '/post/:slug';
+has feedPath    => '/post/feeds/atom.xml';
+has feedCatPath => '/post/feeds/:category/atom.xml';
+has namespace   => 'App::skryf::Plugin::Blog::Controller';
 
 sub register {
-    my ($self, $app, $config) = @_;
+    my ($self, $app) = @_;
 
     $app->routes->route($self->feedPath)->via('GET')->to(
         namespace => $self->namespace,
@@ -75,10 +77,6 @@ Blog index route
 =head2 postPath
 
 Blog detail post path
-
-=head2 adminPathPrefix
-
-Blog admin prefix route
 
 =head2 feedPath
 
