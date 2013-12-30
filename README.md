@@ -23,23 +23,19 @@ These are RESTful calls that return JSON or a proper RSS feed if integrating wit
 
 ## indexPath
 
-Blog index route
+Returns json output of all blog posts
 
 ## postPath
 
-Blog detail post path
-
-## adminPathPrefix
-
-Blog admin prefix route
+Returns json output of a blog detail
 
 ## feedPath
 
-Path to RSS feed
+Returns XML formatted RSS feed
 
 ## feedCatPath
 
-Path to categorized RSS feed
+Returns XML formatted categorized RSS feed
 
 ## namespace
 
