@@ -4,7 +4,10 @@ use Mojo::Base 'Mojolicious::Plugin';
 use Mojo::JSON;
 
 use App::skryf::Plugin::Blog::Model;
+use App::skryf::Plugin::Admin;
 use App::skryf::Util;
+
+use DDP;
 
 # VERSION
 
@@ -67,6 +70,16 @@ sub register {
         }
     )->name('blog_get_post');
 
+    # Administration section
+    my $admin = App::skryf::Plugin::Admin->new(app => $app);
+    if ($admin->is_admin) {
+        $admin->auth_r->route('blog/dashboard')->via('GET')->to(
+            cb => sub {
+                my $self = shift;
+                $self->render(json => {dashboard => 'admin dashboard'});
+            }
+        )->name('admin_blog_dashboard');
+    }
     return;
 }
 
