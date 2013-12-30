@@ -6,9 +6,6 @@ use Mojo::JSON;
 use App::skryf::Plugin::Blog::Model;
 use App::skryf::Util;
 
-# debug
-use DDP;
-
 # VERSION
 
 has indexPath   => '/blog/get_posts';
@@ -55,14 +52,17 @@ sub register {
     $app->routes->route($self->postPath)->via('GET')->to(
         cb => sub {
             my $self = shift;
+            my $post = undef;
             my $slug = $self->param('slug');
             unless ($slug =~ /^[A-Za-z0-9_-]+$/) {
-                $self->render(json => {msg => 'Invalid post name!'});
+                $post = {msg => 'Invalid post'};
             }
             my $post = $self->app->model->get($slug);
-            p $post;
-            $self->render(json => {msg => 'No post found!'})
-              unless ($post);
+            if (!$post) {
+                $self->app->log->debug('No post found for: ' . $slug);
+                $post = {msg => 'No post found'};
+            }
+
             $self->render(json => $post);
         }
     )->name('blog_get_post');
@@ -111,10 +111,6 @@ Returns XML formatted RSS feed
 =head2 feedCatPath
 
 Returns XML formatted categorized RSS feed
-
-=head2 namespace
-
-Blog controller namespace.
 
 =head1 METHODS
 
