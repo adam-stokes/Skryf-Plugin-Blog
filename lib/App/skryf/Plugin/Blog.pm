@@ -57,7 +57,7 @@ sub register {
             unless ($slug =~ /^[A-Za-z0-9_-]+$/) {
                 $post = {msg => 'Invalid post'};
             }
-            my $post = $self->app->model->get($slug);
+            $post = $self->app->model->get($slug);
             if (!$post) {
                 $self->app->log->debug('No post found for: ' . $slug);
                 $post = {msg => 'No post found'};
