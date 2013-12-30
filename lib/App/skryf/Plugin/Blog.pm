@@ -15,74 +15,59 @@ has indexPath   => '/blog/get_posts';
 has postPath    => '/blog/get_post/:slug';
 has feedPath    => '/blog/feeds/atom.xml';
 has feedCatPath => '/blog/feeds/:category/atom.xml';
-has json        => sub { my $self = shift; Mojo::JSON->new; };
-has model       => sub { my $self = shift; App::skryf::Plugin::Blog::Model->new; };
 
 sub register {
     my ($self, $app) = @_;
+    $app->helper(
+        model => sub {
+            my $self = shift;
+            return App::skryf::Plugin::Blog::Model->new;
+        }
+    );
 
     $app->routes->route($self->feedPath)->via('GET')->to(
         cb => sub {
-            my $self = shift;
-            $self->render(text => \&_blog_feeds, format => 'xml');
+            my $self  = shift;
+            my $posts = $self->model->all;
+            my $feed  = App::skryf::Util->feed($self->config, $posts);
+
+            $self->render(text => $feed->as_string, format => 'xml');
         }
     )->name('blog_get_feed');
 
     $app->routes->route($self->feedCatPath)->via('GET')->to(
         cb => sub {
-            my $self = shift;
-            $self->render(text => \&_blog_feeds_by_cat, format => 'xml');
+            my $self     = shift;
+            my $category = $self->param('category');
+            my $posts    = $self->app->model->by_cat($category);
+            my $feed     = App::skryf::Util->feed($self->config, $posts);
+            $self->render(text => $feed->as_string, format => 'xml');
         }
     )->name('blog_get_feed_by_cat');
 
     $app->routes->route($self->indexPath)->via('GET')->to(
         cb => sub {
             my $self = shift;
-            $self->render(json => \&_blog_get_posts);
+            $self->render(json => $self->app->model->all);
         }
     )->name('blog_get_posts');
 
     $app->routes->route($self->postPath)->via('GET')->to(
         cb => sub {
             my $self = shift;
-            $self->render(json => \&_blog_get_post);
+            my $slug = $self->param('slug');
+            unless ($slug =~ /^[A-Za-z0-9_-]+$/) {
+                $self->render(json => {msg => 'Invalid post name!'});
+            }
+            my $post = $self->app->model->get($slug);
+            p $post;
+            $self->render(json => {msg => 'No post found!'})
+              unless ($post);
+            $self->render(json => $post);
         }
     )->name('blog_get_post');
 
     return;
-}
-
-sub _blog_get_posts {
-  my $self = shift;
-  return $self->model->all;
-}
-
-sub _blog_get_post {
-    my $self = shift;
-    my $slug = $self->param('slug');
-    unless ($slug =~ /^[A-Za-z0-9_-]+$/) {
-        return {msg => 'Invalid post name!'};
-    }
-    my $post = $self->model->get($slug);
-    unless ($post) {
-        return {msg => 'No post found!'};
-    }
-    return $post;
-}
-
-sub _blog_feeds_by_cat {
-  my $self = shift;
-    my $category = $self->param('category');
-    my $posts    = $self->model->by_cat($category);
-    my $feed     = App::skryf::Util->feed($self->config, $posts);
-    return $feed->as_string;
-  }
-
-sub _blog_feeds {
-  my $self = shift;
-    my $posts = $self->model->all;
-    my $feed  = App::skryf::Util->feed($self->config, $posts);
-    return $feed->as_string;
 }
 
 1;
