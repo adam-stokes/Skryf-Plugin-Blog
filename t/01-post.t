@@ -7,12 +7,13 @@ use Test::More;
 use FindBin;
 use List::Util qw(first);
 use lib "$FindBin::Bin../../lib";
+use DDP;
 
 plan skip_all => 'set TEST_ONLINE to enable this test'
   unless $ENV{TEST_ONLINE};
 
 diag("Testing posts model");
-use_ok('App::skryf::Model::Post');
+use_ok('App::skryf::Plugin::Blog::Model');
 my $model;
 
 my $topic_a      = 'a sluggable test post';
@@ -21,11 +22,11 @@ my $topic_b      = 'an updated test post';
 my $topic_b_slug = 'an-updated-test-post';
 my $tags         = 'ubuntu, test, blog';
 
-$model = App::skryf::Model::Post->new;
+$model = App::skryf::Plugin::Blog::Model->new;
 ok $model;
 ok $model->posts;
 # cleanup
-ok $model->posts->drop();
+#ok $model->posts->drop();
 ok $model->create($topic_a, 'some content for the test', $tags,);
 my $post = $model->get($topic_a_slug);
 ok $post;
@@ -40,6 +41,6 @@ my $post_by_cat = $model->by_cat('ubuntu');
 ok scalar @{$post_by_cat} > 0;
 ok $post_by_cat;
 ok ref $post_by_cat eq "ARRAY";
-ok $model->remove($topic_b_slug);
+#ok $model->remove($topic_b_slug);
 
 done_testing();

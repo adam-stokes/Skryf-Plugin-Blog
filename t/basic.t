@@ -1,4 +1,7 @@
+#!/usr/bin/env perl
+
 use strict;
+use warnings;
 use Test::More;
 use App::skryf::Plugin::Blog;
 

@@ -1,47 +1,88 @@
 package App::skryf::Plugin::Blog;
 
 use Mojo::Base 'Mojolicious::Plugin';
-use File::Basename 'dirname';
-use File::Spec::Functions 'catdir';
+use Mojo::JSON;
+
+use App::skryf::Plugin::Blog::Model;
+use App::skryf::Util;
 
 # debug
 use DDP;
 
-use App::skryf::Plugin::Blog::Controller;
-
 # VERSION
 
-has indexPath   => '/post/';
-has postPath    => '/post/:slug';
-has feedPath    => '/post/feeds/atom.xml';
-has feedCatPath => '/post/feeds/:category/atom.xml';
-has namespace   => 'App::skryf::Plugin::Blog::Controller';
+has indexPath   => '/blog/get_posts';
+has postPath    => '/blog/get_post/:slug';
+has feedPath    => '/blog/feeds/atom.xml';
+has feedCatPath => '/blog/feeds/:category/atom.xml';
+has json        => sub { my $self = shift; Mojo::JSON->new; };
+has model       => sub { my $self = shift; App::skryf::Plugin::Blog::Model->new; };
 
 sub register {
     my ($self, $app) = @_;
 
     $app->routes->route($self->feedPath)->via('GET')->to(
-        namespace => $self->namespace,
-        action    => 'blog_feeds',
-    )->name('blog_feeds');
+        cb => sub {
+            my $self = shift;
+            $self->render(text => \&_blog_feeds, format => 'xml');
+        }
+    )->name('blog_get_feed');
 
     $app->routes->route($self->feedCatPath)->via('GET')->to(
-        namespace => $self->namespace,
-        action    => 'blog_feeds_by_cat',
-    )->name('blog_cat_feeds');
+        cb => sub {
+            my $self = shift;
+            $self->render(text => \&_blog_feeds_by_cat, format => 'xml');
+        }
+    )->name('blog_get_feed_by_cat');
 
     $app->routes->route($self->indexPath)->via('GET')->to(
-        namespace => $self->namespace,
-        action    => 'blog_index',
-    )->name('blog_index');
+        cb => sub {
+            my $self = shift;
+            $self->render(json => \&_blog_get_posts);
+        }
+    )->name('blog_get_posts');
 
     $app->routes->route($self->postPath)->via('GET')->to(
-        namespace => $self->namespace,
-        action    => 'blog_detail',
-    )->name('blog_detail');
+        cb => sub {
+            my $self = shift;
+            $self->render(json => \&_blog_get_post);
+        }
+    )->name('blog_get_post');
 
-    push @{$app->loaded_plugins}, {plugin => {name => 'Blog',}};
     return;
+}
+
+sub _blog_get_posts {
+  my $self = shift;
+  return $self->model->all;
+}
+
+sub _blog_get_post {
+    my $self = shift;
+    my $slug = $self->param('slug');
+    unless ($slug =~ /^[A-Za-z0-9_-]+$/) {
+        return {msg => 'Invalid post name!'};
+    }
+    my $post = $self->model->get($slug);
+    unless ($post) {
+        return {msg => 'No post found!'};
+    }
+    return $post;
+}
+
+sub _blog_feeds_by_cat {
+  my $self = shift;
+    my $category = $self->param('category');
+    my $posts    = $self->model->by_cat($category);
+    my $feed     = App::skryf::Util->feed($self->config, $posts);
+    return $feed->as_string;
+  }
+
+sub _blog_feeds {
+  my $self = shift;
+    my $posts = $self->model->all;
+    my $feed  = App::skryf::Util->feed($self->config, $posts);
+    return $feed->as_string;
 }
 
 1;
@@ -72,19 +113,19 @@ These are RESTful calls that return JSON or a proper RSS feed if integrating wit
 
 =head2 indexPath
 
-Blog index route
+Returns json output of all blog posts
 
 =head2 postPath
 
-Blog detail post path
+Returns json output of a blog detail
 
 =head2 feedPath
 
-Path to RSS feed
+Returns XML formatted RSS feed
 
 =head2 feedCatPath
 
-Path to categorized RSS feed
+Returns XML formatted categorized RSS feed
 
 =head2 namespace
 
