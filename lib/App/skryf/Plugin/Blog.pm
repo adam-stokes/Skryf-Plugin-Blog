@@ -11,6 +11,20 @@ use DDP;
 
 # VERSION
 
+# META
+# This plugin provides an exposed RESTful interface
+has plugin_rest => 1;
+
+# API is public
+has plugin_rest_public => 1;
+
+# API prefix is /api/blog
+has plugin_rest_prefix => '/blog';
+
+# API version is
+has plugin_rest_version => '1.0';
+
+# OPTIONS
 has indexPath   => '/blog';
 has postPath    => '/blog/:slug';
 has feedPath    => '/blog/feeds/atom.xml';
