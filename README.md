@@ -46,6 +46,8 @@ Returns XML formatted categorized RSS feed
 
     $plugin->register(Mojolicious->new);
 
+Register plugin in [Mojolicious](https://metacpan.org/pod/Mojolicious) application.
+
 ## ROUTES
 
 A list of current available routes:
@@ -60,8 +62,6 @@ A list of current available routes:
     +/admin/blog/edit/:slug         GET       "admin_blog_edit"
     +/admin/blog/update             POST      "admin_blog_update"
     +/admin/blog/delete/:slug       GET       "admin_blog_delete"
-
-Register plugin in [Mojolicious](https://metacpan.org/pod/Mojolicious) application.
 
 # AUTHOR
 

@@ -198,6 +198,8 @@ L<Mojolicious::Plugin> and implements the following new ones.
 
     $plugin->register(Mojolicious->new);
 
+Register plugin in L<Mojolicious> application.
+
 =head2 ROUTES
 
 A list of current available routes:
@@ -212,8 +214,6 @@ A list of current available routes:
     +/admin/blog/edit/:slug         GET       "admin_blog_edit"
     +/admin/blog/update             POST      "admin_blog_update"
     +/admin/blog/delete/:slug       GET       "admin_blog_delete"
-
-Register plugin in L<Mojolicious> application.
 
 =head1 AUTHOR
 
