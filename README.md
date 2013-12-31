@@ -46,6 +46,21 @@ Returns XML formatted categorized RSS feed
 
     $plugin->register(Mojolicious->new);
 
+## ROUTES
+
+A list of current available routes:
+
+    /blog/feeds/atom.xml            GET       "blog_get_feed"
+    /blog/feeds/:category/atom.xml  GET       "blog_get_feed_by_cat"
+    /blog                           GET       "blog_get_posts"
+    /blog/:slug                     GET       "blog_get_post"
+    /                               *
+    +/admin/blog                    GET       "admin_blog_dashboard"
+    +/admin/blog/new                GET,POST  "admin_blog_new"
+    +/admin/blog/edit/:slug         GET       "admin_blog_edit"
+    +/admin/blog/update             POST      "admin_blog_update"
+    +/admin/blog/delete/:slug       GET       "admin_blog_delete"
+
 Register plugin in [Mojolicious](https://metacpan.org/pod/Mojolicious) application.
 
 # AUTHOR

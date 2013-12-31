@@ -66,22 +66,23 @@ sub register {
                 $app->log->debug('No post found for: ' . $slug);
                 $post = {msg => 'No post found'};
             }
-	    $self->stash(post => $post);
+            $self->stash(post => $post);
             $self->render('blog/detail');
         }
     )->name('blog_get_post');
 
     # Administration section
     my $admin = App::skryf::Plugin::Admin->new(app => $app);
-    if ($admin->is_admin) {
-        $admin->auth_r->route('blog/dashboard')->via('GET')->to(
+    my $auth_r = $app->routes->under($admin->is_admin);
+    if ($auth_r) {
+        $auth_r->route($admin->path_prefix . '/blog')->via('GET')->to(
             cb => sub {
                 my $self = shift;
                 $self->stash(postlist => $self->model->all);
-                $self->render('blog/dashboard');
+                $self->render('/blog/dashboard');
             }
         )->name('admin_blog_dashboard');
-        $admin->auth_r->route('blog/new')->via(qw(GET POST))->to(
+        $auth_r->route($admin->path_prefix . '/blog/new')->via(qw(GET POST))->to(
             cb => sub {
                 my $self   = shift;
                 my $method = $self->req->method;
@@ -97,7 +98,7 @@ sub register {
                 }
             }
         )->name('admin_blog_new');
-        $admin->auth_r->route('blog/edit/:slug')->via('GET')->to(
+        $auth_r->route($admin->path_prefix . '/blog/edit/:slug')->via('GET')->to(
             cb => sub {
                 my $self = shift;
                 my $slug = $self->param('slug');
@@ -105,7 +106,7 @@ sub register {
                 $self->render('blog/edit');
             }
         )->name('admin_blog_edit');
-        $admin->auth_r->route('blog/update')->via('POST')->to(
+        $auth_r->route($admin->path_prefix . '/blog/update')->via('POST')->to(
             cb => sub {
                 my $self = shift;
                 my $slug = $self->param('slug');
@@ -121,7 +122,7 @@ sub register {
                 );
             }
         )->name('admin_blog_update');
-        $admin->auth_r->route('blog/delete/:slug')->via('GET')->to(
+        $auth_r->route($admin->path_prefix . '/blog/delete/:slug')->via('GET')->to(
             cb => sub {
                 my $self = shift;
                 my $slug = $self->param('slug');
@@ -195,7 +196,22 @@ L<Mojolicious::Plugin> and implements the following new ones.
 
 =head2 register
 
-  $plugin->register(Mojolicious->new);
+    $plugin->register(Mojolicious->new);
+
+=head2 ROUTES
+
+A list of current available routes:
+
+    /blog/feeds/atom.xml            GET       "blog_get_feed"
+    /blog/feeds/:category/atom.xml  GET       "blog_get_feed_by_cat"
+    /blog                           GET       "blog_get_posts"
+    /blog/:slug                     GET       "blog_get_post"
+    /                               *
+    +/admin/blog                    GET       "admin_blog_dashboard"
+    +/admin/blog/new                GET,POST  "admin_blog_new"
+    +/admin/blog/edit/:slug         GET       "admin_blog_edit"
+    +/admin/blog/update             POST      "admin_blog_update"
+    +/admin/blog/delete/:slug       GET       "admin_blog_delete"
 
 Register plugin in L<Mojolicious> application.
 
