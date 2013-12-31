@@ -3,7 +3,6 @@ package App::skryf::Plugin::Blog::Model;
 # VERSION
 
 use Mojo::Base 'App::skryf::Model::Base';
-use Mango::BSON ':bson';
 use App::skryf::Util;
 use Method::Signatures;
 use DateTime;
@@ -29,25 +28,26 @@ method get ($slug) {
     $self->posts->find_one({slug => $slug});
 }
 
-method create ($topic, $content, $tags, $public = 0, $created = bson_time) {
-    my $slug = App::skryf::Util->slugify($topic);
+method create ($title, $content, $tags, $public = 0, $created = DateTime->now) {
+    my $slug = App::skryf::Util->slugify($title);
     my $html = App::skryf::Util->convert($content);
     $self->posts->insert(
         {   slug    => $slug,
-            topic   => $topic,
+            title   => $title,
             content => $content,
             tags    => $tags,
             public  => $public,
-            created => $created,
+            created => $created->strftime('%Y-%m-%dT%H:%M:%SZ'),
             html    => $html,
         }
     );
 }
 
 method save ($post) {
-    $post->{slug} = App::skryf::Util->slugify($post->{topic});
+    $post->{slug} = App::skryf::Util->slugify($post->{title});
     $post->{html} = App::skryf::Util->convert($post->{content});
-    $post->{modified} = bson_time;
+    my $lt = DateTime->now;
+    $post->{modified} = $lt->strftime('%Y-%m-%dT%H:%M:%SZ');
     $self->posts->save($post);
 }
 

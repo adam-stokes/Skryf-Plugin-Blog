@@ -11,8 +11,8 @@ use DDP;
 
 # VERSION
 
-has indexPath   => '/blog/get_posts';
-has postPath    => '/blog/get_post/:slug';
+has indexPath   => '/blog';
+has postPath    => '/blog/:slug';
 has feedPath    => '/blog/feeds/atom.xml';
 has feedCatPath => '/blog/feeds/:category/atom.xml';
 
@@ -48,7 +48,8 @@ sub register {
     $app->routes->route($self->indexPath)->via('GET')->to(
         cb => sub {
             my $self = shift;
-            $self->render(json => $self->model->all);
+            $self->stash(postlist => $self->model->all);
+            $self->render('blog/index');
         }
     )->name('blog_get_posts');
 
@@ -65,8 +66,8 @@ sub register {
                 $app->log->debug('No post found for: ' . $slug);
                 $post = {msg => 'No post found'};
             }
-
-            $self->render(json => $post);
+	    $self->stash(post => $post);
+            $self->render('blog/detail');
         }
     )->name('blog_get_post');
 
@@ -76,34 +77,72 @@ sub register {
         $admin->auth_r->route('blog/dashboard')->via('GET')->to(
             cb => sub {
                 my $self = shift;
-                $self->render(json => {title => 'admin dashboard'});
+                $self->stash(postlist => $self->model->all);
+                $self->render('blog/dashboard');
             }
         )->name('admin_blog_dashboard');
         $admin->auth_r->route('blog/new')->via(qw(GET POST))->to(
             cb => sub {
-                my $self = shift;
-                $self->render(json => {title => 'blog new'});
+                my $self   = shift;
+                my $method = $self->req->method;
+                if ($method eq "POST") {
+                    my $title   = $self->param('title');
+                    my $content = $self->param('content');
+                    my $tags    = $self->param('tags');
+                    $self->model->create($title, $content, $tags);
+                    $self->redirect_to('admin_blog_dashboard');
+                }
+                else {
+                    $self->render('blog/new');
+                }
             }
         )->name('admin_blog_new');
         $admin->auth_r->route('blog/edit/:slug')->via('GET')->to(
             cb => sub {
                 my $self = shift;
-                $self->render(json => {title => 'blog edit'});
+                my $slug = $self->param('slug');
+                $self->stash(post => $self->model->get($slug));
+                $self->render('blog/edit');
             }
         )->name('admin_blog_edit');
         $admin->auth_r->route('blog/update')->via('POST')->to(
             cb => sub {
                 my $self = shift;
-                $self->render(json => {title => 'blog update'});
+                my $slug = $self->param('slug');
+                my $post = $self->model->get($slug);
+                $post->{title}   = $self->param('title');
+                $post->{content} = $self->param('content');
+                $post->{tags}    = $self->param('tags');
+                $self->model->save($post);
+                $self->redirect_to(
+                    $self->url_for(
+                        'admin_blog_edit', {slug => $post->{slug}}
+                    )
+                );
             }
         )->name('admin_blog_update');
         $admin->auth_r->route('blog/delete/:slug')->via('GET')->to(
             cb => sub {
                 my $self = shift;
-                $self->render(json => {title => 'blog delete'});
+                my $slug = $self->param('slug');
+                if ($self->model->remove($slug)) {
+                    $self->flash(message => 'Removed: ' . $slug);
+                }
+                else {
+                    $self->flash(message => 'Failed to remove post.');
+                }
+                $self->redirect_to('admin_blog_dashboard');
             }
         )->name('admin_blog_delete');
     }
+
+    # register menu item
+    push @{$app->admin_menu},
+      { menu => {
+            name   => 'Blog',
+            action => 'admin_blog_dashboard',
+        }
+      };
     return;
 }
 
