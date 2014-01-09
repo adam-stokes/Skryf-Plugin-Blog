@@ -9,7 +9,7 @@ use App::skryf::Util;
 
 use DDP;
 
-# VERSION
+our $VERSION = '0.02';
 
 # META
 # This plugin provides an exposed RESTful interface
