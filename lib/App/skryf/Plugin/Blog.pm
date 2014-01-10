@@ -230,6 +230,13 @@ A list of current available routes:
     +/admin/blog/update             POST      "admin_blog_update"
     +/admin/blog/delete/:slug       GET       "admin_blog_delete"
 
+=head1 RETURN VALUE
+
+All routes that require viewing/editing of data will place any
+accessible data within the applications B<stash>. This plugin will
+return a stash object of B<post> for single posts and B<postlist> for
+multiple post objects.
+
 =head1 AUTHOR
 
 Adam Stokes E<lt>adamjs@cpan.orgE<gt>
