@@ -7,22 +7,23 @@ use App::skryf::Plugin::Blog::Model;
 use App::skryf::Plugin::Admin;
 use App::skryf::Util;
 
-use DDP;
-
 our $VERSION = '0.02';
 
 # META
 # This plugin provides an exposed RESTful interface
-has plugin_rest => 1;
+has plugin_rest => 0;
 
 # API is public
-has plugin_rest_public => 1;
+has plugin_rest_public => 0;
 
 # API prefix is /api/blog
 has plugin_rest_prefix => '/blog';
 
 # API version is
 has plugin_rest_version => '1.0';
+
+# Template files used
+has template_files => qw[dashboard index new edit detail];
 
 # OPTIONS
 has indexPath   => '/blog';

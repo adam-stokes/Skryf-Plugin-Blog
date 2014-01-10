@@ -1,7 +1,5 @@
 package App::skryf::Plugin::Blog::Model;
 
-# VERSION
-
 use Mojo::Base 'App::skryf::Model::Base';
 use App::skryf::Util;
 use Method::Signatures;
