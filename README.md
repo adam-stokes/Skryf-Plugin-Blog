@@ -63,6 +63,13 @@ A list of current available routes:
     +/admin/blog/update             POST      "admin_blog_update"
     +/admin/blog/delete/:slug       GET       "admin_blog_delete"
 
+# RETURN VALUE
+
+All routes that require viewing/editing of data will place any
+accessible data within the applications __stash__. This plugin will
+return a stash object of __post__ for single posts and __postlist__ for
+multiple post objects.
+
 # AUTHOR
 
 Adam Stokes <adamjs@cpan.org>
