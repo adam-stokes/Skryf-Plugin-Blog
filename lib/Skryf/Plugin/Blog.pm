@@ -155,13 +155,7 @@ Skryf::Plugin::Blog - Skryf Plugin
 
 =head1 SYNOPSIS
 
-  # Mojolicious
-  $self->plugin('Blog');
-
-  # Mojolicious::Lite
-  plugin 'Blog';
-
-  # Configuration
+  # In Skryf configuration
   plugins => {Blog => 1}
 
 =head1 DESCRIPTION
@@ -180,15 +174,13 @@ Template files this plugin recognizes for rendered output.
 
 =head1 OPTIONS
 
-These are RESTful calls that return JSON or a proper RSS feed if integrating with aggregators.
-
 =head2 indexPath
 
-Returns json output of all blog posts
+Path to all blog posts
 
 =head2 postPath
 
-Returns json output of a blog detail
+Path to single blog post
 
 =head2 feedPath
 
