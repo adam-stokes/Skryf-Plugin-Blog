@@ -17,6 +17,16 @@ Skryf::Plugin::Blog - Skryf Plugin
 
 [Skryf::Plugin::Blog](https://metacpan.org/pod/Skryf::Plugin::Blog) is a [Skryf](https://metacpan.org/pod/Skryf) plugin.
 
+# PLUGIN META
+
+## support\_version
+
+Minimal Skryf version that supports this plugin.
+
+## template\_files
+
+Template files this plugin recognizes for rendered output.
+
 # OPTIONS
 
 These are RESTful calls that return JSON or a proper RSS feed if integrating with aggregators.

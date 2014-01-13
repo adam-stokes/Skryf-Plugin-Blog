@@ -11,6 +11,7 @@ our $VERSION = '0.02';
 ###############################################################################
 # Plugin Metadata
 ###############################################################################
+has support_version => '>= 0.99_3';
 has template_files => qw[dashboard index new edit detail];
 
 ###############################################################################
@@ -166,6 +167,16 @@ Skryf::Plugin::Blog - Skryf Plugin
 =head1 DESCRIPTION
 
 L<Skryf::Plugin::Blog> is a L<Skryf> plugin.
+
+=head1 PLUGIN META
+
+=head2 support_version
+
+Minimal Skryf version that supports this plugin.
+
+=head2 template_files
+
+Template files this plugin recognizes for rendered output.
 
 =head1 OPTIONS
 
