@@ -6,7 +6,7 @@ use Mojo::JSON;
 use Skryf::Plugin::Blog::Model;
 use Skryf::Util;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 ###############################################################################
 # Plugin Metadata
