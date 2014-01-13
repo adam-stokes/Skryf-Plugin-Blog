@@ -13,31 +13,29 @@ Skryf::Plugin::Blog - Skryf Plugin
 
 # PLUGIN META
 
-## support\_version
+## author
+
+Plugin Author
+
+## upstream
+
+Upstream source URL
+
+## skryf\_support\_version
 
 Minimal Skryf version that supports this plugin.
 
-## template\_files
+# HELPERS
 
-Template files this plugin recognizes for rendered output.
+## model
 
-# OPTIONS
+## blog\_all
 
-## indexPath
+## blog\_one
 
-Path to all blog posts
+### blog\_feed
 
-## postPath
-
-Path to single blog post
-
-## feedPath
-
-Returns XML formatted RSS feed
-
-## feedCatPath
-
-Returns XML formatted categorized RSS feed
+#### blog\_feed\_by\_cat
 
 # METHODS
 
@@ -54,22 +52,16 @@ Register plugin in [Mojolicious](https://metacpan.org/pod/Mojolicious) applicati
 
 A list of current available routes:
 
-    /blog/feeds/atom.xml            GET       "blog_get_feed"
-    /blog/feeds/:category/atom.xml  GET       "blog_get_feed_by_cat"
-    /blog                           GET       "blog_get_posts"
-    /blog/:slug                     GET       "blog_get_post"
-    /                               *
-    +/admin/blog                    GET       "admin_blog_dashboard"
-    +/admin/blog/new                GET,POST  "admin_blog_new"
-    +/admin/blog/edit/:slug         GET       "admin_blog_edit"
-    +/admin/blog/update             POST      "admin_blog_update"
-    +/admin/blog/delete/:slug       GET       "admin_blog_delete"
+    /blog                           GET       "blog_index"
+    /blog/:slug                     GET       "blog_detail"
+    /blog/feed/                     GET       "blog_feed"
+    /blog/feed/:category/           GET       "blog_feed_category"
 
 # RETURN VALUE
 
-All routes that require viewing/editing of data will place any
-accessible data within the applications __stash__. This plugin provides
-the following stash objects
+Except for the RSS feeds these routes return JSON output of either a
+single post or multiple posts. The top level keys associated with each
+are described below.
 
 ## post
 
