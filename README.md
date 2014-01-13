@@ -33,9 +33,9 @@ Minimal Skryf version that supports this plugin.
 
 ## blog\_one
 
-### blog\_feed
+## blog\_feed
 
-#### blog\_feed\_by\_cat
+## blog\_feed\_by\_cat
 
 # METHODS
 
@@ -65,15 +65,15 @@ are described below.
 
 ## post
 
-    $c->stash(post => $post);
-    <%= $post->{title} %>
+    $c = Mojo::JSON->decode($ua->get('/blog/')->res->body);
+    <%= $c->{post}->{title} %>
 
 A single blog post object
 
 ## postlist
 
-    $c->stash(postlist => $posts_array);
-    <% for my $post ( @{$postlist} ) { %>
+    $c = Mojo::JSON->decode($ua->get('/blog/a-post-slug')->res->body);
+    <% for my $post ( @{$c->{postlist}} ) { %>
       <%= $post->{title} %>
     <% } %>
 

@@ -129,9 +129,9 @@ Minimal Skryf version that supports this plugin.
 
 =head2 blog_one
 
-=head3 blog_feed
+=head2 blog_feed
 
-=head4 blog_feed_by_cat
+=head2 blog_feed_by_cat
 
 =head1 METHODS
 
@@ -161,15 +161,15 @@ are described below.
 
 =head2 post
 
-  $c->stash(post => $post);
-  <%= $post->{title} %>
+  $c = Mojo::JSON->decode($ua->get('/blog/')->res->body);
+  <%= $c->{post}->{title} %>
 
 A single blog post object
 
 =head2 postlist
 
-  $c->stash(postlist => $posts_array);
-  <% for my $post ( @{$postlist} ) { %>
+  $c = Mojo::JSON->decode($ua->get('/blog/a-post-slug')->res->body);
+  <% for my $post ( @{$c->{postlist}} ) { %>
     <%= $post->{title} %>
   <% } %>
 
