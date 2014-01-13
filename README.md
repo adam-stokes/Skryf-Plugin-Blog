@@ -10,8 +10,8 @@ Skryf::Plugin::Blog - Skryf Plugin
     # Mojolicious::Lite
     plugin 'Blog';
 
-    # skryf.conf
-    extra_modules => {Blog => 1}
+    # Configuration
+    plugins => {Blog => 1}
 
 # DESCRIPTION
 
@@ -71,9 +71,17 @@ the following stash objects
 
 ## post
 
+    $c->stash(post => $post);
+    <%= $post->{title} %>
+
 A single blog post object
 
 ## postlist
+
+    $c->stash(postlist => $posts_array);
+    <% for my $post ( @{$postlist} ) { %>
+      <%= $post->{title} %>
+    <% } %>
 
 Multiple blog post objects.
 
