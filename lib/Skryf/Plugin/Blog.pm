@@ -12,7 +12,7 @@ our $VERSION = '0.03';
 ###############################################################################
 has author                => 'Adam Stokes <adamjs@cpan.org>';
 has upstream              => 'https://github.com/skryf/Skryf-Plugin-Blog';
-has skryf_support_version => '>= 0.99_3';
+has skryf_support_version => '>= 0.99_4';
 
 sub register {
     my ($self, $app) = @_;

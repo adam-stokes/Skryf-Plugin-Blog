@@ -4,6 +4,8 @@ use Mojo::Base 'Skryf::Model::Base';
 use Skryf::Util;
 use DateTime;
 
+our $VERSION = '0.03';
+
 sub posts {
     my $self = shift;
     $self->mgo->db->collection('posts');
