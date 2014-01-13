@@ -161,14 +161,14 @@ are described below.
 
 =head2 post
 
-  $c = Mojo::JSON->decode($ua->get('/blog/')->res->body);
+  $c = Mojo::JSON->decode($ua->get('/blog/a-post-slug')->res->body);
   <%= $c->{post}->{title} %>
 
 A single blog post object
 
 =head2 postlist
 
-  $c = Mojo::JSON->decode($ua->get('/blog/a-post-slug')->res->body);
+  $c = Mojo::JSON->decode($ua->get('/blog')->res->body);
   <% for my $post ( @{$c->{postlist}} ) { %>
     <%= $post->{title} %>
   <% } %>
