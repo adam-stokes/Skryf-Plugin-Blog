@@ -48,7 +48,7 @@ Returns XML formatted categorized RSS feed
 
 Register plugin in [Mojolicious](https://metacpan.org/pod/Mojolicious) application.
 
-## ROUTES
+# ROUTES
 
 A list of current available routes:
 
@@ -66,9 +66,16 @@ A list of current available routes:
 # RETURN VALUE
 
 All routes that require viewing/editing of data will place any
-accessible data within the applications __stash__. This plugin will
-return a stash object of __post__ for single posts and __postlist__ for
-multiple post objects.
+accessible data within the applications __stash__. This plugin provides
+the following stash objects
+
+## post
+
+A single blog post object
+
+## postlist
+
+Multiple blog post objects.
 
 # AUTHOR
 

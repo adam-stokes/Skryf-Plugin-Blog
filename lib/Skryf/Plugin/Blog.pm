@@ -198,7 +198,7 @@ L<Mojolicious::Plugin> and implements the following new ones.
 
 Register plugin in L<Mojolicious> application.
 
-=head2 ROUTES
+=head1 ROUTES
 
 A list of current available routes:
 
@@ -216,9 +216,16 @@ A list of current available routes:
 =head1 RETURN VALUE
 
 All routes that require viewing/editing of data will place any
-accessible data within the applications B<stash>. This plugin will
-return a stash object of B<post> for single posts and B<postlist> for
-multiple post objects.
+accessible data within the applications B<stash>. This plugin provides
+the following stash objects
+
+=head2 post
+
+A single blog post object
+
+=head2 postlist
+
+Multiple blog post objects.
 
 =head1 AUTHOR
 
