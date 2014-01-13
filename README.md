@@ -1,6 +1,6 @@
 # NAME
 
-App::skryf::Plugin::Blog - Skryf Plugin
+Skryf::Plugin::Blog - Skryf Plugin
 
 # SYNOPSIS
 
@@ -15,7 +15,7 @@ App::skryf::Plugin::Blog - Skryf Plugin
 
 # DESCRIPTION
 
-[App::skryf::Plugin::Blog](https://metacpan.org/pod/App::skryf::Plugin::Blog) is a [App::skryf](https://metacpan.org/pod/App::skryf) plugin.
+[Skryf::Plugin::Blog](https://metacpan.org/pod/Skryf::Plugin::Blog) is a [Skryf](https://metacpan.org/pod/Skryf) plugin.
 
 # OPTIONS
 
@@ -39,7 +39,7 @@ Returns XML formatted categorized RSS feed
 
 # METHODS
 
-[App::skryf::Plugin::Blog](https://metacpan.org/pod/App::skryf::Plugin::Blog) inherits all methods from
+[Skryf::Plugin::Blog](https://metacpan.org/pod/Skryf::Plugin::Blog) inherits all methods from
 [Mojolicious::Plugin](https://metacpan.org/pod/Mojolicious::Plugin) and implements the following new ones.
 
 ## register
@@ -84,4 +84,4 @@ Licensed under the same terms as Perl.
 
 # SEE ALSO
 
-[App::skryf](https://metacpan.org/pod/App::skryf), [Mojolicious](https://metacpan.org/pod/Mojolicious), [Mojolicious::Guides](https://metacpan.org/pod/Mojolicious::Guides), [http://mojolicio.us](http://mojolicio.us).
+[Skryf](https://metacpan.org/pod/Skryf), [Mojolicious](https://metacpan.org/pod/Mojolicious), [Mojolicious::Guides](https://metacpan.org/pod/Mojolicious::Guides), [http://mojolicio.us](http://mojolicio.us).

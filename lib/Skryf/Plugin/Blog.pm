@@ -1,31 +1,21 @@
-package App::skryf::Plugin::Blog;
+package Skryf::Plugin::Blog;
 
 use Mojo::Base 'Mojolicious::Plugin';
 use Mojo::JSON;
 
-use App::skryf::Plugin::Blog::Model;
-use App::skryf::Plugin::Admin;
-use App::skryf::Util;
+use Skryf::Plugin::Blog::Model;
+use Skryf::Util;
 
 our $VERSION = '0.02';
 
-# META
-# This plugin provides an exposed RESTful interface
-has plugin_rest => 0;
-
-# API is public
-has plugin_rest_public => 0;
-
-# API prefix is /api/blog
-has plugin_rest_prefix => '/blog';
-
-# API version is
-has plugin_rest_version => '1.0';
-
-# Template files used
+###############################################################################
+# Plugin Metadata
+###############################################################################
 has template_files => qw[dashboard index new edit detail];
 
-# OPTIONS
+###############################################################################
+# Plugin Options
+###############################################################################
 has indexPath   => '/blog';
 has postPath    => '/blog/:slug';
 has feedPath    => '/blog/feeds/atom.xml';
@@ -36,7 +26,7 @@ sub register {
     $app->helper(
         model => sub {
             my $self = shift;
-            return App::skryf::Plugin::Blog::Model->new;
+            return Skryf::Plugin::Blog::Model->new(dbname => $self->config->{dbname});
         }
     );
 
@@ -44,7 +34,7 @@ sub register {
         cb => sub {
             my $self  = shift;
             my $posts = $self->model->all;
-            my $feed  = App::skryf::Util->feed($self->config, $posts);
+            my $feed  = Skryf::Util->feed($self->config, $posts);
 
             $self->render(text => $feed->as_string, format => 'xml');
         }
@@ -55,7 +45,7 @@ sub register {
             my $self     = shift;
             my $category = $self->param('category');
             my $posts    = $self->model->by_cat($category);
-            my $feed     = App::skryf::Util->feed($self->config, $posts);
+            my $feed     = Skryf::Util->feed($self->config, $posts);
             $self->render(text => $feed->as_string, format => 'xml');
         }
     )->name('blog_get_feed_by_cat');
@@ -87,17 +77,17 @@ sub register {
     )->name('blog_get_post');
 
     # Administration section
-    my $admin = App::skryf::Plugin::Admin->new(app => $app);
-    my $auth_r = $app->routes->under($admin->is_admin);
+    my $admin = $app->is_admin;
+    my $auth_r = $app->routes->under($app->is_admin);
     if ($auth_r) {
-        $auth_r->route($admin->path_prefix . '/blog')->via('GET')->to(
+        $auth_r->route('/admin/blog')->via('GET')->to(
             cb => sub {
                 my $self = shift;
                 $self->stash(postlist => $self->model->all);
                 $self->render('/blog/dashboard');
             }
         )->name('admin_blog_dashboard');
-        $auth_r->route($admin->path_prefix . '/blog/new')->via(qw(GET POST))->to(
+        $auth_r->route('/admin/blog/new')->via(qw(GET POST))->to(
             cb => sub {
                 my $self   = shift;
                 my $method = $self->req->method;
@@ -113,7 +103,7 @@ sub register {
                 }
             }
         )->name('admin_blog_new');
-        $auth_r->route($admin->path_prefix . '/blog/edit/:slug')->via('GET')->to(
+        $auth_r->route('/admin/blog/edit/:slug')->via('GET')->to(
             cb => sub {
                 my $self = shift;
                 my $slug = $self->param('slug');
@@ -121,7 +111,7 @@ sub register {
                 $self->render('blog/edit');
             }
         )->name('admin_blog_edit');
-        $auth_r->route($admin->path_prefix . '/blog/update')->via('POST')->to(
+        $auth_r->route('/admin/blog/update')->via('POST')->to(
             cb => sub {
                 my $self = shift;
                 my $slug = $self->param('slug');
@@ -137,7 +127,7 @@ sub register {
                 );
             }
         )->name('admin_blog_update');
-        $auth_r->route($admin->path_prefix . '/blog/delete/:slug')->via('GET')->to(
+        $auth_r->route('/admin/blog/delete/:slug')->via('GET')->to(
             cb => sub {
                 my $self = shift;
                 my $slug = $self->param('slug');
@@ -152,13 +142,6 @@ sub register {
         )->name('admin_blog_delete');
     }
 
-    # register menu item
-    push @{$app->admin_menu},
-      { menu => {
-            name   => 'Blog',
-            action => 'admin_blog_dashboard',
-        }
-      };
     return;
 }
 
@@ -167,7 +150,7 @@ __END__
 
 =head1 NAME
 
-App::skryf::Plugin::Blog - Skryf Plugin
+Skryf::Plugin::Blog - Skryf Plugin
 
 =head1 SYNOPSIS
 
@@ -182,7 +165,7 @@ App::skryf::Plugin::Blog - Skryf Plugin
 
 =head1 DESCRIPTION
 
-L<App::skryf::Plugin::Blog> is a L<App::skryf> plugin.
+L<Skryf::Plugin::Blog> is a L<Skryf> plugin.
 
 =head1 OPTIONS
 
@@ -206,7 +189,7 @@ Returns XML formatted categorized RSS feed
 
 =head1 METHODS
 
-L<App::skryf::Plugin::Blog> inherits all methods from
+L<Skryf::Plugin::Blog> inherits all methods from
 L<Mojolicious::Plugin> and implements the following new ones.
 
 =head2 register
@@ -251,6 +234,6 @@ Licensed under the same terms as Perl.
 
 =head1 SEE ALSO
 
-L<App::skryf>, L<Mojolicious>, L<Mojolicious::Guides>, L<http://mojolicio.us>.
+L<Skryf>, L<Mojolicious>, L<Mojolicious::Guides>, L<http://mojolicio.us>.
 
 =cut

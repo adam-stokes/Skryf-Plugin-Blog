@@ -1,5 +1,4 @@
-requires 'App::skryf::Plugin::Admin';
-requires 'App::skryf::Util';
+requires 'Skryf';
 requires 'DDP';
 requires 'DateTime';
 requires 'List::Util';

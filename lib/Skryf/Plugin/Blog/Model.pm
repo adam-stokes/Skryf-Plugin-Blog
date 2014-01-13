@@ -1,34 +1,46 @@
-package App::skryf::Plugin::Blog::Model;
+package Skryf::Plugin::Blog::Model;
 
-use Mojo::Base 'App::skryf::Model::Base';
-use App::skryf::Util;
-use Method::Signatures;
+use Mojo::Base 'Skryf::Model::Base';
+use Skryf::Util;
 use DateTime;
 
-method posts {
+sub posts {
+    my $self = shift;
     $self->mgo->db->collection('posts');
 }
 
-method all {
+sub all {
+    my $self = shift;
     $self->posts->find->sort({created => -1})->all;
 }
 
-method this_year ($limit = 5) {
+sub this_year {
+    my ($self, $limit) = @_;
+    $limit = 5 unless $limit;
     my $year = DateTime->now->year;
-    $self->posts->find({created => qr/$year/})->sort({created => -1})->limit($limit)->all;
+    $self->posts->find({created => qr/$year/})->sort({created => -1})
+      ->limit($limit)->all;
 }
 
-method by_year ($year = DateTime->now->year, $limit = -1) {
-    $self->posts->find({created => qr/$year/})->sort({created => -1})->limit($limit)->all;
+sub by_year {
+    my ($self, $year, $limit) = @_;
+    $year = DateTime->now->year unless $year;
+    $limit = -1 unless $limit;
+    $self->posts->find({created => qr/$year/})->sort({created => -1})
+      ->limit($limit)->all;
 }
 
-method get ($slug) {
+sub get {
+    my ($self, $slug) = @_;
     $self->posts->find_one({slug => $slug});
 }
 
-method create ($title, $content, $tags, $public = 0, $created = DateTime->now) {
-    my $slug = App::skryf::Util->slugify($title);
-    my $html = App::skryf::Util->convert($content);
+sub create {
+    my ($self, $title, $content, $tags, $public, $created) = @_;
+    $public  = 0             unless $public;
+    $created = DateTime->now unless $created;
+    my $slug = Skryf::Util->slugify($title);
+    my $html = Skryf::Util->convert($content);
     $self->posts->insert(
         {   slug    => $slug,
             title   => $title,
@@ -41,19 +53,22 @@ method create ($title, $content, $tags, $public = 0, $created = DateTime->now) {
     );
 }
 
-method save ($post) {
-    $post->{slug} = App::skryf::Util->slugify($post->{title});
-    $post->{html} = App::skryf::Util->convert($post->{content});
+sub save {
+    my ($self, $post) = @_;
+    $post->{slug} = Skryf::Util->slugify($post->{title});
+    $post->{html} = Skryf::Util->convert($post->{content});
     my $lt = DateTime->now;
     $post->{modified} = $lt->strftime('%Y-%m-%dT%H:%M:%SZ');
     $self->posts->save($post);
 }
 
-method remove ($slug) {
+sub remove {
+    my ($self, $slug) = @_;
     $self->posts->remove({slug => $slug});
 }
 
-method by_cat ($category) {
+sub by_cat {
+    my ($self, $category) = @_;
     my $_filtered = [];
     foreach (@{$self->all}) {
         if ((my $found = $_->{tags}) =~ /$category/) {
@@ -68,7 +83,7 @@ __END__
 
 =head1 NAME
 
-App::skryf::Plugin::Blog:::Model - Skryf Blog Model
+Skryf::Plugin::Blog:::Model - Skryf Blog Model
 
 =head1 DESCRIPTION
 
