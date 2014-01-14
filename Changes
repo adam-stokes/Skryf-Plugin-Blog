@@ -1,6 +1,7 @@
 Revision history for App-skryf-Plugin-Blog
 
 {{$NEXT}}
+	- Fix update action
 
 0.04  2014-01-14 15:37:13 EST
 	- Blog viewing and admin actions added

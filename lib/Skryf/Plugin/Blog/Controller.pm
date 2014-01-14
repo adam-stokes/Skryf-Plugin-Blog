@@ -1,6 +1,7 @@
 package Skryf::Plugin::Blog::Controller;
 
 use Mojo::Base 'Mojolicious::Controller';
+use Hash::Merge;
 use DDP;
 
 sub index {
@@ -57,20 +58,20 @@ sub admin_new {
 }
 
 sub admin_update {
-    my $self       = shift;
-    my $slug       = $self->param('slug');
-    my $saved_post = $self->blog_one($slug);
-    p $self->params;
-    if ($saved_post) {
-
-        # $self->model->save($post);
-        $self->flash(message => sprintf("Saved: %s", $slug));
+    my $self      = shift;
+    my $slug      = $self->param('slug');
+    my $is_posted = $self->blog_one($slug);
+    if ($is_posted) {
+      my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+        my $params = $self->req->params->to_hash;
+        $self->model->save($merge->merge($is_posted,$params));
+        $self->flash(message => "Saved post!");
     }
     else {
         $self->flash(message => sprintf("Could not find post: %s", $slug));
         $self->redirect_to('admin_blog_dashboard');
     }
-    $self->redirect_to($self->url_for('admin_blog_edit', {slug => $slug}));
+    $self->redirect_to($self->url_for('admin_blog_dashboard'));
 }
 
 sub admin_delete {
