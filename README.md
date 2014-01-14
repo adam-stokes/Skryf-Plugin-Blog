@@ -11,20 +11,6 @@ Skryf::Plugin::Blog - Skryf Plugin
 
 [Skryf::Plugin::Blog](https://metacpan.org/pod/Skryf::Plugin::Blog) is a [Skryf](https://metacpan.org/pod/Skryf) plugin.
 
-# PLUGIN META
-
-## author
-
-Plugin Author
-
-## upstream
-
-Upstream source URL
-
-## skryf\_support\_version
-
-Minimal Skryf version that supports this plugin.
-
 # HELPERS
 
 ## model

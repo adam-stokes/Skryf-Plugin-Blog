@@ -2,24 +2,17 @@ package Skryf::Plugin::Blog;
 
 use Mojo::Base 'Mojolicious::Plugin';
 
-use Skryf::Plugin::Blog::Model;
+use Skryf::Plugin::Blog:::Model;
 use Skryf::Util;
 
-our $VERSION = '0.03';
-
-###############################################################################
-# Plugin Metadata
-###############################################################################
-has author                => 'Adam Stokes <adamjs@cpan.org>';
-has upstream              => 'https://github.com/skryf/Skryf-Plugin-Blog';
-has skryf_support_version => '>= 0.99_4';
+our $VERSION = '0.99_5';
 
 sub register {
     my ($self, $app) = @_;
     $app->helper(
         model => sub {
             my $self = shift;
-            return Skryf::Plugin::Blog::Model->new(
+            return Skryf::Plugin::Blog:::Model->new(
                 dbname => $self->config->{dbname});
         }
     );
@@ -27,7 +20,7 @@ sub register {
     $app->helper(
         blog_all => sub {
             my $self = shift;
-            return Skryf::Util->json->decode($self->model->all);
+            return Skryf::Util->json->encode($self->model->all);
         }
     );
 
@@ -35,7 +28,7 @@ sub register {
         blog_one => sub {
             my $self = shift;
             my $slug = shift;
-            return Skryf::Util->json->decode($self->model->get($slug))
+            return Skryf::Util->json->encode($self->model->get($slug))
               || undef;
         }
     );
@@ -88,6 +81,63 @@ sub register {
             $self->render(xml => $self->blog_feed_by_cat($category));
         }
     )->name('blog_feed_category');
+
+    # Admin hooks
+    if ($app->auth_r) {
+        $app->auth_r->route('/admin/blog')->via('GET')->to(
+            cb => sub {
+                my $self = shift;
+                $self->render('/admin/blog/dashboard');
+            }
+        )->name('admin_blog_dashboard');
+        $app->auth_r->route('/admin/blog/edit/:slug')->via('GET')->to(
+            cb => sub {
+                my $self = shift;
+                my $slug = $self->param('slug');
+                $self->stash(post => $self->model->get($slug));
+                $self->render('/admin/blog/edit');
+            }
+        )->name('admin_blog_edit');
+        $app->auth_r->route('/admin/blog/new')->via(qw[GET POST])->to(
+            cb => sub {
+                my $self = shift;
+                if ($self->req->method eq "POST") {
+                    $self->flash(message => "Saved.");
+                    $self->redirect_to('admin_blog_dashboard');
+                }
+                else {
+                    $self->render('/admin/blog/new');
+                }
+            }
+        )->name('admin_blog_new');
+        $app->auth_r->route('/admin/blog/update/:slug')->via('POST')->to(
+            cb => sub {
+                my $self       = shift;
+                my $slug       = $self->param('slug');
+                my $saved_post = $self->model->get($slug);
+                if ($saved_post) {
+
+                    # DO update
+                }
+                else {
+                    $self->flash(
+                        message => sprintf("Could not find post: %s", $slug));
+                    $self->redirect_to('admin_blog_dashboard');
+                }
+                $self->redirect_to(
+                    $self->url_for('admin_blog_edit', {slug => $slug}));
+            }
+        )->name('admin_blog_update');
+        $app->auth_r->route('/admin/blog/delete/:slug')->via('POST')->to(
+            cb => sub {
+                my $self = shift;
+                my $slug = $self->param('slug');
+                $self->model->remove($slug);
+                $self->flash(message => sprintf("Post: %s deleted.", $slug));
+                $self->redirect_to($self->url_for('admin_blog_dashboard'));
+            }
+        )->name('admin_blog_delete');
+    }
     return;
 }
 
@@ -106,20 +156,6 @@ Skryf::Plugin::Blog - Skryf Plugin
 =head1 DESCRIPTION
 
 L<Skryf::Plugin::Blog> is a L<Skryf> plugin.
-
-=head1 PLUGIN META
-
-=head2 author
-
-Plugin Author
-
-=head2 upstream
-
-Upstream source URL
-
-=head2 skryf_support_version
-
-Minimal Skryf version that supports this plugin.
 
 =head1 HELPERS
 

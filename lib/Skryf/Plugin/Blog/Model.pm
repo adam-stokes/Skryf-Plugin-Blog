@@ -1,4 +1,4 @@
-package Skryf::Plugin::Blog::Model;
+package Skryf::Plugin::Blog:::Model;
 
 use Mojo::Base 'Skryf::Model::Base';
 use Skryf::Util;
