@@ -47,7 +47,7 @@
          }
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/skryf/Skryf-Plugin-Blog/issues"
@@ -59,7 +59,7 @@
          "web" : "https://github.com/skryf/Skryf-Plugin-Blog"
       }
    },
-   "version" : "0.99_5",
+   "version" : "0.03",
    "x_contributors" : [
       "Adam Stokes <adam.stokes@ubuntu.com>"
    ]

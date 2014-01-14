@@ -2,17 +2,17 @@ package Skryf::Plugin::Blog;
 
 use Mojo::Base 'Mojolicious::Plugin';
 
-use Skryf::Plugin::Blog:::Model;
+use Skryf::Plugin::Blog::Model;
 use Skryf::Util;
 
-our $VERSION = '0.99_5';
+our $VERSION = '0.03';
 
 sub register {
     my ($self, $app) = @_;
     $app->helper(
         model => sub {
             my $self = shift;
-            return Skryf::Plugin::Blog:::Model->new(
+            return Skryf::Plugin::Blog::Model->new(
                 dbname => $self->config->{dbname});
         }
     );
@@ -20,7 +20,7 @@ sub register {
     $app->helper(
         blog_all => sub {
             my $self = shift;
-            return Skryf::Util->json->encode($self->model->all);
+            return $self->model->all || undef;
         }
     );
 
@@ -28,7 +28,7 @@ sub register {
         blog_one => sub {
             my $self = shift;
             my $slug = shift;
-            return Skryf::Util->json->encode($self->model->get($slug))
+            return $self->model->get($slug)
               || undef;
         }
     );
@@ -55,89 +55,33 @@ sub register {
 ###############################################################################
 # Routes
 ###############################################################################
-    $app->routes->route('/blog')->via('GET')->to(
-        cb => sub {
-            my $self = shift;
-            $self->render(json => {postlist => $self->blog_all});
-        }
-    )->name('blog_index');
-    $app->routes->route('/blog/:slug')->via('GET')->to(
-        cb => sub {
-            my $self = shift;
-            my $slug = $self->param('slug');
-            $self->render(json => {post => $self->blog_one($slug)});
-        }
-    )->name('blog_detail');
-    $app->routes->route('/blog/feed')->via('GET')->to(
-        cb => sub {
-            my $self = shift;
-            $self->render(xml => $self->blog_feed);
-        }
-    )->name('blog_feed');
-    $app->routes->route('/blog/feed/:category')->via('GET')->to(
-        cb => sub {
-            my $self     = shift;
-            my $category = $self->param('category');
-            $self->render(xml => $self->blog_feed_by_cat($category));
-        }
-    )->name('blog_feed_category');
+    # Add Blog/Controller.pm to our namespace
+    push @{$app->routes->namespaces}, 'Skryf::Plugin::Blog';
+    $app->routes->any('/blog')->to('controller#index')->name('blog_index');
+    $app->routes->any('/blog/:slug')->to('controller#detail')
+      ->name('blog_detail');
+    $app->routes->any('/blog/feed')->to('controller#feed')->name('blog_feed');
+    $app->routes->any('/blog/feed/:category')->to('controller#feed_by_cat')
+      ->name('blog_feed_by_cat');
 
     # Admin hooks
-    if ($app->auth_r) {
-        $app->auth_r->route('/admin/blog')->via('GET')->to(
-            cb => sub {
-                my $self = shift;
-                $self->render('/admin/blog/dashboard');
-            }
-        )->name('admin_blog_dashboard');
-        $app->auth_r->route('/admin/blog/edit/:slug')->via('GET')->to(
-            cb => sub {
-                my $self = shift;
-                my $slug = $self->param('slug');
-                $self->stash(post => $self->model->get($slug));
-                $self->render('/admin/blog/edit');
-            }
-        )->name('admin_blog_edit');
-        $app->auth_r->route('/admin/blog/new')->via(qw[GET POST])->to(
-            cb => sub {
-                my $self = shift;
-                if ($self->req->method eq "POST") {
-                    $self->flash(message => "Saved.");
-                    $self->redirect_to('admin_blog_dashboard');
-                }
-                else {
-                    $self->render('/admin/blog/new');
-                }
-            }
-        )->name('admin_blog_new');
-        $app->auth_r->route('/admin/blog/update/:slug')->via('POST')->to(
-            cb => sub {
-                my $self       = shift;
-                my $slug       = $self->param('slug');
-                my $saved_post = $self->model->get($slug);
-                if ($saved_post) {
+    my $if_admin = $app->routes->under(
+        sub {
+            my $self = shift;
+            return $self->auth_fail unless $self->is_admin;
+        }
+    );
 
-                    # DO update
-                }
-                else {
-                    $self->flash(
-                        message => sprintf("Could not find post: %s", $slug));
-                    $self->redirect_to('admin_blog_dashboard');
-                }
-                $self->redirect_to(
-                    $self->url_for('admin_blog_edit', {slug => $slug}));
-            }
-        )->name('admin_blog_update');
-        $app->auth_r->route('/admin/blog/delete/:slug')->via('POST')->to(
-            cb => sub {
-                my $self = shift;
-                my $slug = $self->param('slug');
-                $self->model->remove($slug);
-                $self->flash(message => sprintf("Post: %s deleted.", $slug));
-                $self->redirect_to($self->url_for('admin_blog_dashboard'));
-            }
-        )->name('admin_blog_delete');
-    }
+    $if_admin->any('/admin/blog')->to('controller#admin_dashboard')
+      ->name('admin_blog_dashboard');
+    $if_admin->any('/admin/blog/edit/:slug')->to('controller#admin_edit')
+      ->name('admin_blog_edit');
+    $if_admin->any('/admin/blog/new')->to('controller#admin_new')
+      ->name('admin_blog_new');
+    $if_admin->post('/admin/blog/update/:slug')
+      ->to('controller#admin_update')->name('admin_blog_update');
+    $if_admin->any('/admin/blog/delete/:slug')->to('controller#admin_delete')
+      ->name('admin_blog_delete');
     return;
 }
 

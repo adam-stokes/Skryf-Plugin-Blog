@@ -1,4 +1,4 @@
-package Skryf::Plugin::Blog:::Model;
+package Skryf::Plugin::Blog::Model;
 
 use Mojo::Base 'Skryf::Model::Base';
 use Skryf::Util;
@@ -38,21 +38,13 @@ sub get {
 }
 
 sub create {
-    my ($self, $title, $content, $tags, $public, $created) = @_;
-    $public  = 0             unless $public;
-    $created = DateTime->now unless $created;
-    my $slug = Skryf::Util->slugify($title);
-    my $html = Skryf::Util->convert($content);
-    $self->posts->insert(
-        {   slug    => $slug,
-            title   => $title,
-            content => $content,
-            tags    => $tags,
-            public  => $public,
-            created => $created->strftime('%Y-%m-%dT%H:%M:%SZ'),
-            html    => $html,
-        }
-    );
+    my ($self, $items) = @_;
+    $items->{public} = 0 unless $items->{public};
+    my $_created = DateTime->now unless $items->{created};
+    $items->{created} = $_created->strftime('%Y-%m-%dT%H:%M:%SZ');
+    $items->{slug} = Skryf::Util->slugify($items->{title});
+    $items->{html} = Skryf::Util->convert($items->{content});
+    $self->posts->insert($items);
 }
 
 sub save {
@@ -96,6 +88,18 @@ Post model
 =head2 B<posts>
 
 Posts collection
+
+=head2 B<create>
+
+Accepts a hash of items to be inserted into the Blog collection.
+
+=head3 B<Required keys that need to exist in the hash>
+
+=head4 content
+
+=head4 tags
+
+=head4 title
 
 =head1 SEE ALSO
 
