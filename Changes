@@ -2,6 +2,9 @@ Revision history for App-skryf-Plugin-Blog
 
 {{$NEXT}}
 
+0.04  2014-01-14 15:37:13 EST
+	- Blog viewing and admin actions added
+
 0.03  2014-01-13 14:34:59 EST
 	- dev release
 
