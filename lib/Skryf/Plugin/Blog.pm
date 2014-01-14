@@ -128,28 +128,32 @@ Register plugin in L<Mojolicious> application.
 
 A list of current available routes:
 
-    /blog                           GET       "blog_index"
-    /blog/:slug                     GET       "blog_detail"
-    /blog/feed/                     GET       "blog_feed"
-    /blog/feed/:category/           GET       "blog_feed_category"
+    /blog                        *     "blog_index"
+    /blog/:slug                  *     "blog_detail"
+    /blog/feed                   *     "blog_feed"
+    /blog/feed/:category         *     "blog_feed_by_cat"
+    /                            *
+      +/admin/blog               *     "admin_blog_dashboard"
+      +/admin/blog/edit/:slug    *     "admin_blog_edit"
+      +/admin/blog/new           *     "admin_blog_new"
+      +/admin/blog/update/:slug  POST  "admin_blog_update"
+      +/admin/blog/delete/:slug  *     "admin_blog_delete"
 
 =head1 RETURN VALUE
 
-Except for the RSS feeds these routes return JSON output of either a
-single post or multiple posts. The top level keys associated with each
-are described below.
+The GET'able routes return either a single post or multiple post objects. They are described below:
 
 =head2 post
 
-  $c = Mojo::JSON->decode($ua->get('/blog/a-post-slug')->res->body);
-  <%= $c->{post}->{title} %>
+  $self->stash(post => $self->blog_one($slug));
+  <%= $post->{title} %>
 
 A single blog post object
 
 =head2 postlist
 
-  $c = Mojo::JSON->decode($ua->get('/blog')->res->body);
-  <% for my $post ( @{$c->{postlist}} ) { %>
+  $self->stash(postlist => $self->blog_all);
+  <% for my $post ( @{$postlist} ) { %>
     <%= $post->{title} %>
   <% } %>
 

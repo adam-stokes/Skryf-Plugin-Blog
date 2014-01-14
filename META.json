@@ -38,6 +38,7 @@
          "requires" : {
             "DateTime" : "0",
             "DateTime::Format::RFC3339" : "0",
+            "Hash::Merge" : "0",
             "List::Util" : "0",
             "Mango" : "0",
             "Mojolicious" : "0",
