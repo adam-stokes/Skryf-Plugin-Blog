@@ -48,7 +48,7 @@ sub admin_new {
     my $self = shift;
     if ($self->req->method eq "POST") {
         my $params = $self->req->params->to_hash;
-        $self->model->create($params);
+        $self->blog_model->create($params);
         $self->flash(message => "Saved.");
         $self->redirect_to('admin_blog_dashboard');
     }
@@ -64,7 +64,7 @@ sub admin_update {
     if ($is_posted) {
       my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
         my $params = $self->req->params->to_hash;
-        $self->model->save($merge->merge($is_posted,$params));
+        $self->blog_model->save($merge->merge($is_posted,$params));
         $self->flash(message => "Saved post!");
     }
     else {
@@ -77,7 +77,7 @@ sub admin_update {
 sub admin_delete {
     my $self = shift;
     my $slug = $self->param('slug');
-    $self->model->remove($slug);
+    $self->blog_model->remove($slug);
     $self->flash(message => sprintf("Post: %s deleted.", $slug));
     $self->redirect_to($self->url_for('admin_blog_dashboard'));
 }

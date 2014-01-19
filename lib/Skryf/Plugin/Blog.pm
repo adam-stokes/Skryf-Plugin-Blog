@@ -10,7 +10,7 @@ our $VERSION = '0.05';
 sub register {
     my ($self, $app) = @_;
     $app->helper(
-        model => sub {
+        blog_model => sub {
             my $self = shift;
             return Skryf::Plugin::Blog::Model->new(
                 dbname => $self->config->{dbname});
@@ -20,7 +20,7 @@ sub register {
     $app->helper(
         blog_all => sub {
             my $self = shift;
-            return $self->model->all || undef;
+            return $self->blog_model->all || undef;
         }
     );
 
@@ -28,7 +28,7 @@ sub register {
         blog_one => sub {
             my $self = shift;
             my $slug = shift;
-            return $self->model->get($slug)
+            return $self->blog_model->get($slug)
               || undef;
         }
     );
@@ -36,7 +36,7 @@ sub register {
     $app->helper(
         blog_feed => sub {
             my $self  = shift;
-            my $posts = $self->model->all;
+            my $posts = $self->blog_model->all;
             my $feed  = Skryf::Util->feed($self->config, $posts);
             return $feed->as_string;
         }
@@ -46,7 +46,7 @@ sub register {
         blog_feed_by_cat => sub {
             my $self     = shift;
             my $category = shift;
-            my $posts    = $self->model->by_cat($category);
+            my $posts    = $self->blog_model->by_cat($category);
             my $feed     = Skryf::Util->feed($self->config, $posts);
             return $feed->as_string;
         }
