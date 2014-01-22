@@ -4,7 +4,7 @@ use Mojo::Base 'Skryf::Model::Base';
 use Skryf::Util;
 use DateTime;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub posts {
     my $self = shift;
