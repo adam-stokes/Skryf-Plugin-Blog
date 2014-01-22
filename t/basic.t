@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use Test::More;
-use App::skryf::Plugin::Blog;
+use Skryf::Plugin::Blog;
 
 # replace with the actual test
 ok 1;
