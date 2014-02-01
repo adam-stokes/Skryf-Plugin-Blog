@@ -1,0 +1,87 @@
+NAME
+
+    Skryf::Plugin::Blog - Blog plugin for Skryf
+
+VERSION
+
+    version 0.001_03
+
+SYNOPSIS
+
+      # In Skryf configuration
+      plugins => {Blog => 1}
+
+DESCRIPTION
+
+    Skryf::Plugin::Blog is a Skryf plugin.
+
+HELPERS
+
+ model
+
+ blog_all
+
+ blog_one
+
+ blog_feed
+
+ blog_feed_by_cat
+
+METHODS
+
+    Skryf::Plugin::Blog inherits all methods from Mojolicious::Plugin and
+    implements the following new ones.
+
+ register
+
+        $plugin->register(Mojolicious->new);
+
+    Register plugin in Mojolicious application.
+
+ROUTES
+
+    A list of current available routes:
+
+        /blog                        *     "blog_index"
+        /blog/:slug                  *     "blog_detail"
+        /blog/feed                   *     "blog_feed"
+        /blog/feed/:category         *     "blog_feed_by_cat"
+        /                            *
+          +/admin/blog               *     "admin_blog_dashboard"
+          +/admin/blog/edit/:slug    *     "admin_blog_edit"
+          +/admin/blog/new           *     "admin_blog_new"
+          +/admin/blog/update/:slug  POST  "admin_blog_update"
+          +/admin/blog/delete/:slug  *     "admin_blog_delete"
+
+RETURN VALUE
+
+    The GET'able routes return either a single post or multiple post
+    objects. They are described below:
+
+ post
+
+      $self->stash(post => $self->blog_one($slug));
+      <%= $post->{title} %>
+
+    A single blog post object
+
+ postlist
+
+      $self->stash(postlist => $self->blog_all);
+      <% for my $post ( @{$postlist} ) { %>
+        <%= $post->{title} %>
+      <% } %>
+
+    Multiple blog post objects.
+
+AUTHOR
+
+    Adam Stokes <adamjs@cpan.org>
+
+COPYRIGHT AND LICENSE
+
+    This software is copyright (c) 2014 by Adam Stokes.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+

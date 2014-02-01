@@ -3,5 +3,5 @@
 /_build*
 /Build
 MYMETA.*
-!META.json
+!META.yml
 /.prove

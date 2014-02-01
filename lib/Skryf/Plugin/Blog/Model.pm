@@ -1,10 +1,9 @@
 package Skryf::Plugin::Blog::Model;
+# ABSTRACT: Blog Model
 
 use Mojo::Base 'Skryf::Model::Base';
 use Skryf::Util;
 use DateTime;
-
-our $VERSION = '0.06';
 
 sub posts {
     my $self = shift;
@@ -100,16 +99,5 @@ Accepts a hash of items to be inserted into the Blog collection.
 =head4 tags
 
 =head4 title
-
-=head1 SEE ALSO
-
-L<Mojolicious>, L<Mojolicious::Guides>, L<http://mojolicio.us>. L<Mango>.
-
-=head1 COPYRIGHT AND LICENSE
-
-This plugin is copyright (c) 2013 by Adam Stokes <adamjs@cpan.org>
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
 
 =cut

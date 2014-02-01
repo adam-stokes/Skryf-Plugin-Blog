@@ -1,11 +1,10 @@
 package Skryf::Plugin::Blog;
+# ABSTRACT: Blog plugin for Skryf
 
 use Mojo::Base 'Mojolicious::Plugin';
 
 use Skryf::Plugin::Blog::Model;
 use Skryf::Util;
-
-our $VERSION = '0.06';
 
 sub register {
     my ($self, $app) = @_;
@@ -88,10 +87,6 @@ sub register {
 1;
 __END__
 
-=head1 NAME
-
-Skryf::Plugin::Blog - Skryf Plugin
-
 =head1 SYNOPSIS
 
   # In Skryf configuration
@@ -158,21 +153,5 @@ A single blog post object
   <% } %>
 
 Multiple blog post objects.
-
-=head1 AUTHOR
-
-Adam Stokes E<lt>adamjs@cpan.orgE<gt>
-
-=head1 COPYRIGHT
-
-Copyright 2013- Adam Stokes
-
-=head1 LICENSE
-
-Licensed under the same terms as Perl.
-
-=head1 SEE ALSO
-
-L<Skryf>, L<Mojolicious>, L<Mojolicious::Guides>, L<http://mojolicio.us>.
 
 =cut
