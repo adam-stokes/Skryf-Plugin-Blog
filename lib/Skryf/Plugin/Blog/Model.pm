@@ -74,10 +74,6 @@ sub by_cat {
 1;
 __END__
 
-=head1 NAME
-
-Skryf::Plugin::Blog:::Model - Skryf Blog Model
-
 =head1 DESCRIPTION
 
 Post model
