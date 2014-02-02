@@ -27,4 +27,4 @@ requires:
   Hash::Merge: '0'
   Mojo::Base: '0'
   Skryf::Util: '0'
-version: '0.07'
+version: '0.08'
