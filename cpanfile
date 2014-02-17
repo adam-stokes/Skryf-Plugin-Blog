@@ -1,10 +1,9 @@
-requires "DDP" => "0";
 requires "DateTime" => "0";
 requires "Hash::Merge" => "0";
 requires "Mojo::Base" => "0";
-requires "Skryf::Util" => "0";
 
 on 'test' => sub {
+  requires "DDP" => "0";
   requires "FindBin" => "0";
   requires "List::Util" => "0";
   requires "Mojolicious" => "0";

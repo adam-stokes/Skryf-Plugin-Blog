@@ -3,7 +3,6 @@ package Skryf::Plugin::Blog::Controller;
 
 use Mojo::Base 'Mojolicious::Controller';
 use Hash::Merge;
-use DDP;
 
 sub index {
     my $self = shift;
