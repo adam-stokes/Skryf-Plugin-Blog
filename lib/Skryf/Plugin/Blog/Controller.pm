@@ -62,9 +62,9 @@ sub admin_update {
     my $slug      = $self->param('slug');
     my $is_posted = $self->blog_one($slug);
     if ($is_posted) {
-      my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+        my $merge  = Hash::Merge->new('RIGHT_PRECEDENT');
         my $params = $self->req->params->to_hash;
-        $self->blog_model->save($merge->merge($is_posted,$params));
+        $self->blog_model->save($merge->merge($is_posted, $params));
         $self->flash(message => "Saved post!");
     }
     else {
