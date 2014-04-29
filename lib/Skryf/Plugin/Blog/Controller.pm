@@ -1,4 +1,5 @@
 package Skryf::Plugin::Blog::Controller;
+
 # ABSTRACT: Blog controller
 
 use Mojo::Base 'Mojolicious::Controller';
