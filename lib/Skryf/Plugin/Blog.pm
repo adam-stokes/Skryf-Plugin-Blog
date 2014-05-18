@@ -1,4 +1,5 @@
 package Skryf::Plugin::Blog;
+
 # ABSTRACT: Blog plugin for Skryf
 
 use Mojo::Base 'Mojolicious::Plugin';
@@ -8,6 +9,13 @@ use Skryf::Util;
 
 sub register {
     my ($self, $app) = @_;
+
+    $app->helper(
+        blog_roles => sub {
+            my $self = shift;
+        }
+    );
+
     $app->helper(
         blog_model => sub {
             my $self = shift;
