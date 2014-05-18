@@ -11,12 +11,6 @@ sub register {
     my ($self, $app) = @_;
 
     $app->helper(
-        blog_roles => sub {
-            my $self = shift;
-        }
-    );
-
-    $app->helper(
         blog_model => sub {
             my $self = shift;
             return Skryf::Plugin::Blog::Model->new(
