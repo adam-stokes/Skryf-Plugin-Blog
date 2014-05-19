@@ -1,25 +1,27 @@
 package Skryf::Plugin::Blog::Model;
 # ABSTRACT: Blog Model
 
-use Mojo::Base 'Skryf::Model::Base';
 use Skryf::Util;
 use DateTime;
 
-sub posts {
+use Moo;
+extends 'Skryf::Model::Base';
+
+sub BUILD {
     my $self = shift;
-    $self->mgo->db->collection('posts');
+    $self->namespace('posts');
 }
 
 sub all {
     my $self = shift;
-    $self->posts->find->sort({created => -1})->all;
+    $self->q->find->sort({created => -1})->all;
 }
 
 sub this_year {
     my ($self, $limit) = @_;
     $limit = 5 unless $limit;
     my $year = DateTime->now->year;
-    $self->posts->find({created => qr/$year/})->sort({created => -1})
+    $self->q->find({created => qr/$year/})->sort({created => -1})
       ->limit($limit)->all;
 }
 
@@ -27,13 +29,8 @@ sub by_year {
     my ($self, $year, $limit) = @_;
     $year = DateTime->now->year unless $year;
     $limit = -1 unless $limit;
-    $self->posts->find({created => qr/$year/})->sort({created => -1})
+    $self->q->find({created => qr/$year/})->sort({created => -1})
       ->limit($limit)->all;
-}
-
-sub get {
-    my ($self, $slug) = @_;
-    $self->posts->find_one({slug => $slug});
 }
 
 sub create {
@@ -43,7 +40,7 @@ sub create {
     $items->{created} = $_created->strftime('%Y-%m-%dT%H:%M:%SZ');
     $items->{slug} = Skryf::Util->slugify($items->{title});
     $items->{html} = Skryf::Util->convert($items->{content});
-    $self->posts->insert($items);
+    $self->q->insert($items);
 }
 
 sub save {
@@ -52,12 +49,7 @@ sub save {
     $post->{html} = Skryf::Util->convert($post->{content});
     my $lt = DateTime->now;
     $post->{modified} = $lt->strftime('%Y-%m-%dT%H:%M:%SZ');
-    $self->posts->save($post);
-}
-
-sub remove {
-    my ($self, $slug) = @_;
-    $self->posts->remove({slug => $slug});
+    $self->q->save($post);
 }
 
 sub by_cat {
