@@ -69,7 +69,8 @@ sub register {
     my $if_admin = $app->routes->under(
         sub {
             my $self = shift;
-            return $self->auth_fail unless $self->is_admin;
+            return $self->auth_role_fail
+              unless $self->auth_has_role("blog", "can_modify");
         }
     );
 
