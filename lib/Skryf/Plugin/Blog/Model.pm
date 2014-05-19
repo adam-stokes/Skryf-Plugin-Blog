@@ -1,21 +1,13 @@
 package Skryf::Plugin::Blog::Model;
+
 # ABSTRACT: Blog Model
 
 use Skryf::Util;
 use DateTime;
 
 use Moo;
-extends 'Skryf::Model::Base';
+use namespace::clean;
 
-sub BUILD {
-    my $self = shift;
-    $self->namespace('posts');
-}
-
-sub all {
-    my $self = shift;
-    $self->q->find->sort({created => -1})->all;
-}
 
 sub this_year {
     my ($self, $limit) = @_;
@@ -38,8 +30,8 @@ sub create {
     $items->{public} = 0 unless $items->{public};
     my $_created = DateTime->now unless $items->{created};
     $items->{created} = $_created->strftime('%Y-%m-%dT%H:%M:%SZ');
-    $items->{slug} = Skryf::Util->slugify($items->{title});
-    $items->{html} = Skryf::Util->convert($items->{content});
+    $items->{slug}    = Skryf::Util->slugify($items->{title});
+    $items->{html}    = Skryf::Util->convert($items->{content});
     $self->q->insert($items);
 }
 
